@@ -6,27 +6,24 @@ package es.itrafa.dam_di_ud3_t1;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimerTask;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.border.TitledBorder;
 
 /**
  *
  * @author it-ra
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
-public class alarmClockBean extends JLabel implements Serializable {
+public class AlarmClockBean extends JLabel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,7 +37,7 @@ public class alarmClockBean extends JLabel implements Serializable {
     private Timer updateTime;
 
     // CONTRUCTOR
-    public alarmClockBean() {
+    public AlarmClockBean() {
         super("00:00:00");
         initComponent();
 
@@ -88,13 +85,26 @@ public class alarmClockBean extends JLabel implements Serializable {
     }
 
     private void initComponent() {
+        // configuracion estética inicial del reloj
         alarmMsg = "Aviso alarma";
         setBackground(Color.darkGray);
         setForeground(Color.red);
         setFont(new java.awt.Font("Noto Mono", 1, 18)); // NOI18N
-        setBorder(javax.swing.BorderFactory.createTitledBorder(null, " PM ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), java.awt.Color.gray)); // NOI18N
+        setBorder(javax.swing.BorderFactory.createTitledBorder(
+                javax.swing.BorderFactory.createTitledBorder(
+                        null, " set alarm ",
+                        javax.swing.border.TitledBorder.CENTER,
+                        javax.swing.border.TitledBorder.BOTTOM
+                ),
+                " alarm & format ",
+                javax.swing.border.TitledBorder.RIGHT,
+                javax.swing.border.TitledBorder.DEFAULT_POSITION)
+        );
+
         setPreferredSize(new Dimension(115, 45));
         setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Asigna y activa listener para actualizar la hora
         updaterTime();
 
     }
@@ -102,25 +112,54 @@ public class alarmClockBean extends JLabel implements Serializable {
     private void updaterTime() {
         final String initHtml = "<html><div style='text-align: center;'>";
         final String endHtml = "</div></html>";
-        
+
+        TitledBorder tb = (TitledBorder) getBorder();
 
         java.util.Timer timer = new java.util.Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
+                // Captura hora actual
+                Calendar calendar = Calendar.getInstance();
+                // Preparamos formato hora
                 SimpleDateFormat format;
+                String timeFormat;
                 if (format24h) {
+                    timeFormat = " 24 h"; // pendiente: pasar a listener de cambio propiedad de format24h
                     format = new SimpleDateFormat("HH:mm:ss");
+
                 } else {
+                    // // if pendiente: pasar a listener de cambio propiedad de format24h
+                    if (calendar.get(Calendar.AM_PM) == Calendar.AM) {
+                        timeFormat = " a.m.";
+                    } else {
+                        timeFormat = " p.m.";
+                    }
+
                     format = new SimpleDateFormat("hh:mm:ss");
                 }
-                Calendar calendar = Calendar.getInstance();
+                // Muestra hora con formato
                 String fullTimeTxt = String.format("%s%s%s", initHtml, format.format(calendar.getTime()), endHtml);
                 setText(fullTimeTxt);
+
+                // esto debe ir en listener de cambio propiedad de alarmActivated
+                if (alarmActivated) {
+                    tb.setTitle(" alarm - " + timeFormat);
+
+                } else {
+                    tb.setTitle(timeFormat);
+                }
             }
         };
-        timer.scheduleAtFixedRate(task, 0, 1000);
+        timer.scheduleAtFixedRate(task, 0, 500);
 
     }
 
+    public void propertyChange(PropertyChangeEvent evt) {
+        // TODO Auto-generated method stub
+        if (evt.getPropertyName().equals(this.alarmActivated)) {
+            System.out.println("cambiaste alarma");
+
+        }
+    }
 }
