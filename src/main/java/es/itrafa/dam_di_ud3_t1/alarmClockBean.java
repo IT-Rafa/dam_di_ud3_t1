@@ -7,12 +7,14 @@ package es.itrafa.dam_di_ud3_t1;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimerTask;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -23,7 +25,7 @@ import javax.swing.border.TitledBorder;
  * @author it-ra
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
-public class AlarmClockBean extends JLabel implements Serializable {
+public class AlarmClockBean extends JButton implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,8 +35,6 @@ public class AlarmClockBean extends JLabel implements Serializable {
     private String alarmMsg;
     private int alarmHour;
     private int alarmMinutes;
-
-    private Timer updateTime;
 
     // CONTRUCTOR
     public AlarmClockBean() {
@@ -97,7 +97,7 @@ public class AlarmClockBean extends JLabel implements Serializable {
                         javax.swing.border.TitledBorder.BOTTOM
                 ),
                 " alarm & format ",
-                javax.swing.border.TitledBorder.RIGHT,
+                javax.swing.border.TitledBorder.LEFT,
                 javax.swing.border.TitledBorder.DEFAULT_POSITION)
         );
 
@@ -107,6 +107,13 @@ public class AlarmClockBean extends JLabel implements Serializable {
         // Asigna y activa listener para actualizar la hora
         updaterTime();
 
+        this.addPropertyChangeListener("alarmActivated", new PropertyChangeListener() { // NOI18N
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                System.out.println("hola");
+
+            }
+        });
     }
 
     private void updaterTime() {
@@ -155,11 +162,4 @@ public class AlarmClockBean extends JLabel implements Serializable {
 
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
-        // TODO Auto-generated method stub
-        if (evt.getPropertyName().equals(this.alarmActivated)) {
-            System.out.println("cambiaste alarma");
-
-        }
-    }
 }

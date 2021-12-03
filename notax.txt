@@ -1,0 +1,30 @@
+Crear bean para mostrar hora
+
+- Probar a hacerlo usando bean component
+
+
+- Basado en JLabel
+    - hereda JLabel
+- Como Bean
+    - intefaz serializable
+    - contructor sin argumentos
+
+- Propiedades modificables como bean
+    - boolean format24h -> indica si usa formato 24h (sin no, es 12h) defecto false
+         (00:00:00=24h; 12:00:00pm=12h)
+    - boolean alarmActivated -> Indica si alarma debe dar aviso defecto false
+    - int alarmHour-> Indica hora que alarma da aviso defecto 0
+    - int alarmMinutes -> Indica minutos que alarma da aviso defecto 0
+    - int alarmMsg -> Indica mensaje mostrado alarma da aviso "Aviso alarma"
+
+- Comportamiento
+    - El texto del JLabel es la hora actual, que se actualiza cada seg+-
+    - Ese texto se mostrará con fomato 24 o 12, según atributo format24
+    - Si alarma está activa:
+         - se mostrará aviso en la etiqueta
+         - sonará cuando hora actual sea igual a hora alarma
+
+- según argumento
+    - usar timer para lanzar actionPeformed cada seg
+    - En actionPerformed se actualiza texto hora (segun formato)
+    - valores defecto en contructor
