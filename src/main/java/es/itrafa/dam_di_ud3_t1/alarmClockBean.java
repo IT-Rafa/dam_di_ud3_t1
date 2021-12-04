@@ -14,10 +14,8 @@ import java.util.Calendar;
 import java.util.TimerTask;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
 /**
@@ -25,7 +23,7 @@ import javax.swing.border.TitledBorder;
  * @author it-ra
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
-public class AlarmClockBean extends JButton implements Serializable {
+public class AlarmClockBean extends JLabel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
