@@ -12,7 +12,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimerTask;
 import javax.swing.JLabel;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 /**
@@ -91,16 +93,19 @@ public class NewBean extends JLabel implements Serializable {
         propertySupport.firePropertyChange(FORMAT24H_PROPERTY, oldValue, this.format24h);
     }
 
-    // CONSTRUCTORS
-    public NewBean() {
-        propertySupport = new PropertyChangeSupport(this);
-        myInitComponents();
-        
-    }
-
+    // METHODS
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertySupport.addPropertyChangeListener(listener);
+
+        // Problema al añadir elemento
+        try {
+            propertySupport.addPropertyChangeListener(listener);
+            
+
+        } catch (Exception e) {
+            System.out.println(" - problema al añadir desconocido: Listener");
+            System.out.println(listener.toString());
+        }
     }
 
     @Override
@@ -115,37 +120,28 @@ public class NewBean extends JLabel implements Serializable {
     public void setPropertySupport(PropertyChangeSupport propertySupport) {
         this.propertySupport = propertySupport;
     }
+private class EditorValueChangeListener implements PropertyChangeListener {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("value".equals(evt.getPropertyName())) {
+                System.out.println("Old value:" + evt.getOldValue());
+                System.out.println("New value:" + evt.getNewValue());
+            }
+        }
+    }
 
-    private void myInitComponents() {
+    private void initValues() {
         // configuracion estética inicial del reloj
+        setText("00:00:00");
         alarmMsg = "Aviso alarma";
-        setBackground(Color.darkGray);
-        setForeground(Color.red);
-        setFont(new java.awt.Font("Noto Mono", 1, 18)); // NOI18N
-        setBorder(javax.swing.BorderFactory.createTitledBorder(
-                javax.swing.BorderFactory.createTitledBorder(
-                        null, " set alarm ",
-                        javax.swing.border.TitledBorder.CENTER,
-                        javax.swing.border.TitledBorder.BOTTOM
-                ),
-                " alarm & format ",
-                javax.swing.border.TitledBorder.LEFT,
-                javax.swing.border.TitledBorder.DEFAULT_POSITION)
-        );
+        alarmActivated = false;
+        alarmHour = 0;
+        alarmMinutes = 0;
+        format24h = false;
 
-        setPreferredSize(new Dimension(115, 45));
-        setHorizontalAlignment(SwingConstants.CENTER);
-
-        // Asigna y activa listener para actualizar la hora
-        updaterTime();
     }
 
     private void updaterTime() {
-        final String initHtml = "<html><div style='text-align: center;'>";
-        final String endHtml = "</div></html>";
-
-        TitledBorder tb = (TitledBorder) getBorder();
-
         java.util.Timer timer = new java.util.Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -153,37 +149,82 @@ public class NewBean extends JLabel implements Serializable {
                 // Captura hora actual
                 Calendar calendar = Calendar.getInstance();
                 // Preparamos formato hora
-                SimpleDateFormat format;
-                String timeFormat;
+                SimpleDateFormat timeFormat;
                 if (format24h) {
-                    timeFormat = " 24 h"; // pendiente: pasar a listener de cambio propiedad de format24h
-                    format = new SimpleDateFormat("HH:mm:ss");
+                    timeFormat = new SimpleDateFormat("HH:mm:ss");
 
                 } else {
-                    // // if pendiente: pasar a listener de cambio propiedad de format24h
-                    if (calendar.get(Calendar.AM_PM) == Calendar.AM) {
-                        timeFormat = " a.m.";
-                    } else {
-                        timeFormat = " p.m.";
-                    }
-
-                    format = new SimpleDateFormat("hh:mm:ss");
+                    timeFormat = new SimpleDateFormat("hh:mm:ss");
                 }
+
                 // Muestra hora con formato
-                String fullTimeTxt = String.format("%s%s%s", initHtml, format.format(calendar.getTime()), endHtml);
-                setText(fullTimeTxt);
+                setText(timeFormat.format(calendar.getTime()));
 
-                // esto debe ir en listener de cambio propiedad de alarmActivated
-                if (alarmActivated) {
-                    tb.setTitle(" alarm - " + timeFormat);
-
-                } else {
-                    tb.setTitle(timeFormat);
-                }
             }
         };
         timer.scheduleAtFixedRate(task, 0, 500);
 
+    }
+
+    private void lookConfig() {
+        // commmon
+        LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+        setForeground(new java.awt.Color(0, 102, 0));
+        setFont(new java.awt.Font("Noto Mono", 1, 18)); // NOI18N
+        setBorder(javax.swing.BorderFactory.createTitledBorder(
+                javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED),
+                " p.m."));
+        setBorder(javax.swing.BorderFactory.createTitledBorder(
+                javax.swing.BorderFactory.createEtchedBorder(
+                        javax.swing.border.EtchedBorder.RAISED),
+                " p.m.",
+                javax.swing.border.TitledBorder.RIGHT,
+                javax.swing.border.TitledBorder.DEFAULT_POSITION,
+                new java.awt.Font("Tahoma", 0, 11),
+                new java.awt.Color(0, 102, 0))
+        ); // NOI18N
+
+
+        setHorizontalAlignment(SwingConstants.CENTER);
+        
+        switch (lookAndFeel.getName()) {
+
+            case "Nimbus":
+                nimbusFeel();
+                break;
+            case "Metal":
+                metalFeel();
+                break;
+            default:
+                System.out.println("LAF: Otro");
+                break;
+        }
+
+    }
+
+    private void feelConfig() {
+        propertySupport = new PropertyChangeSupport(this);
+        updaterTime();
+    }
+
+    // CONSTRUCTORS
+    public NewBean() {
+
+        // Valores iniciales
+        initValues();
+        // Aspecto inicial
+        lookConfig();
+        // Comportamiento
+        feelConfig();
+
+    }
+
+    private void nimbusFeel() {
+        setPreferredSize(new Dimension(115, 45));
+    }
+
+    private void metalFeel() {
+        setPreferredSize(new Dimension(115, 45));
     }
 
 }
