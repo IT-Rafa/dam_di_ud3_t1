@@ -25,7 +25,7 @@ import javax.swing.border.TitledBorder;
  *
  * @author it-ra
  */
-public class NewBean extends JLabel implements Serializable {
+public class AlarmClockBean extends JLabel implements Serializable {
 
     // ATTRIBUTES
     private static final long serialVersionUID = 1L;
@@ -301,7 +301,7 @@ public class NewBean extends JLabel implements Serializable {
     }
 
     // CONSTRUCTORS
-    public NewBean() {
+    public AlarmClockBean() {
         // Valores iniciales
         initValues();
         // Aspecto inicial
