@@ -4,9 +4,6 @@
  */
 package es.itrafa.dam_di_ud3_t1.test;
 
-import javax.swing.LookAndFeel;
-import javax.swing.UIManager;
-
 /**
  *
  * @author it-ra
@@ -29,9 +26,12 @@ public class NimbusJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        newBean2 = new es.itrafa.dam_di_ud3_t1.NewBean();
+        newBean2 = new es.itrafa.dam_di_ud3_t1.AlarmClockBean();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setText("Nimbus");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -41,11 +41,17 @@ public class NimbusJFrame extends javax.swing.JFrame {
                 .addContainerGap(40, Short.MAX_VALUE)
                 .addComponent(newBean2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(48, 48, 48)
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(23, 23, 23)
                 .addComponent(newBean2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(68, Short.MAX_VALUE))
         );
@@ -90,6 +96,7 @@ public class NimbusJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private es.itrafa.dam_di_ud3_t1.NewBean newBean2;
+    private javax.swing.JLabel jLabel1;
+    private es.itrafa.dam_di_ud3_t1.AlarmClockBean newBean2;
     // End of variables declaration//GEN-END:variables
 }
